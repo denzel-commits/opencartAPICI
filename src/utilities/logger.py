@@ -5,9 +5,9 @@ from configuration import LOGGING_LEVEL, LOG_FILE_PATH
 
 
 class Logger:
-    def __init__(self, name, log_level):
-        self.logger = logging.getLogger(name)
-        self.logger.setLevel(logging.INFO)
+    def __init__(self, name: str, log_level: str) -> None:
+        self._logger = logging.getLogger(name)
+        self._logger.setLevel(LOGGING_LEVEL)
 
         if not os.path.exists(LOG_FILE_PATH):
             os.makedirs(LOG_FILE_PATH)
@@ -20,11 +20,12 @@ class Logger:
         file_handler.setFormatter(formatter)
 
         stream_handler = logging.StreamHandler()
-        stream_handler.setLevel(logging.INFO)
+        stream_handler.setLevel(log_level)
         stream_handler.setFormatter(formatter)
 
-        self.logger.addHandler(file_handler)
-        self.logger.addHandler(stream_handler)
+        self._logger.addHandler(file_handler)
+        self._logger.addHandler(stream_handler)
 
-    def get_logger(self):
-        return self.logger
+    @property
+    def logger(self) -> logging:
+        return self._logger
