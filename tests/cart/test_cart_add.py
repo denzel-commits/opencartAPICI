@@ -4,7 +4,7 @@ import random
 import allure
 import pytest
 
-from src.classes.test_data_manager import TestDataManager
+from src.classes.data_manager import DataManager
 from src.enums.routes import Routes
 from src.pydantic_schemas.cart import Cart
 from src.pydantic_schemas.success import Success
@@ -14,7 +14,7 @@ from src.pydantic_schemas.error import Error
 @allure.feature("Cart")
 @allure.story("Add to cart happy path")
 class TestAddToCart:
-    test_products = TestDataManager().get_test_products_from_db()
+    test_products = DataManager().get_test_products_from_db()
 
     @allure.title("Add product to cart base session")
     @pytest.mark.session
@@ -136,7 +136,7 @@ class TestAddToCart:
 @allure.feature("Cart")
 @allure.story("Add to cart negative")
 class TestAddToCartNegative:
-    test_products = TestDataManager().get_invalid_test_products_from_db()
+    test_products = DataManager().get_invalid_test_products_from_db()
 
     @allure.title("Add product to cart not existing product")
     @pytest.mark.parametrize("product_id, quantity", [(10001, 1), (0, 1)])
@@ -205,7 +205,7 @@ class TestAddToCartNegative:
             'quantity': 1
         }
 
-        opencart_api.post(Routes.CART + f"/add", params=params, data=data).\
+        opencart_api.post(Routes.CART + "/add", params=params, data=data).\
             assert_status_code(HTTPStatus.OK).\
             validate_schema(Error).\
             assert_warning_message("Warning: You do not have permission to access the API!")

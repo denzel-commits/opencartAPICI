@@ -2,9 +2,8 @@ import os
 import hashlib
 from socket import socket
 
-import mysql.connector as mysql
 import pytest
-from configuration import TEST_DATA_PATH, MYSQL_CREDENTIALS
+from configuration import TEST_DATA_PATH
 from src.utilities.utilities import csv_reader
 
 
@@ -115,7 +114,7 @@ def setup_db_products(db_connection, request, logger):
     request.addfinalizer(finalizer)
 
     cursor = db_connection.cursor()
-    for row in csv_reader(filename=os.path.join(TEST_DATA_PATH, f"products.csv")):
+    for row in csv_reader(filename=os.path.join(TEST_DATA_PATH, "products.csv")):
         # insert product columns
         product_columns = ["model", "sku", "upc", "ean", "jan", "isbn", "mpn", "location", "quantity",
                            "stock_status_id", "image", "manufacturer_id", "shipping", "price", "points", "tax_class_id",

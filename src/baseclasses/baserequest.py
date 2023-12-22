@@ -44,7 +44,7 @@ class BaseRequest:
                     case "DELETE":
                         response = requests.delete(url)
                     case _:
-                        raise NotImplemented
+                        raise NotImplementedError
 
             except requests.exceptions.Timeout:
                 self.logger.warning(f"Timeout error, retry attempt {attempt}")

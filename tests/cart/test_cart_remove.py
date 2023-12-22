@@ -4,7 +4,7 @@ from http import HTTPStatus
 import allure
 import pytest
 
-from src.classes.test_data_manager import TestDataManager
+from src.classes.data_manager import DataManager
 from src.pydantic_schemas.cart import Cart
 from src.pydantic_schemas.error import Error
 from src.pydantic_schemas.success import Success
@@ -13,11 +13,12 @@ from src.pydantic_schemas.success import Success
 @allure.feature("Cart")
 @allure.story("Remove from cart")
 class TestRemoveFromCart:
-    test_products = TestDataManager().get_test_products_from_db()
+    test_products = DataManager().get_test_products_from_db()
 
     @allure.title("Remove product from cart parametrized")
     @pytest.mark.parametrize("product_id, quantity, price", [random.choice(test_products)])
-    def test_remove_from_card_successfully(self, product_id, quantity, price, class_cart_client, remove_all_items_from_cart):
+    def test_remove_from_card_successfully(self, product_id, quantity, price, class_cart_client,
+                                           remove_all_items_from_cart):
         data = {
             'product_id': product_id,
             'quantity': quantity

@@ -48,7 +48,7 @@ class BaseResponse:
     @allure.step("Validate success message")
     def assert_success_message(self, message: str) -> Self:
         self.logger.info(f"Validate success message is {message}")
-        assert self.response_json["success"] == message, f"Response message is " + self.response_json["success"]
+        assert self.response_json["success"] == message, "Response message is " + self.response_json["success"]
 
         return self
 
@@ -56,7 +56,7 @@ class BaseResponse:
     def assert_error_message(self, message: str) -> Self:
         self.logger.info("Validate error message is {message}")
         assert self.response_json["error"]["store"] == message, \
-            f"Response message " + self.response_json["error"]["store"] + f" is not expected {message}"
+            "Response message " + self.response_json["error"]["store"] + f" is not expected {message}"
 
         return self
 
@@ -64,7 +64,7 @@ class BaseResponse:
     def assert_warning_message(self, message: str) -> Self:
         self.logger.info(f"Validate warning message is {message}")
         assert self.response_json["error"]["warning"] == message, \
-            f"Response message " + self.response_json["error"]["store"] + f" is not expected {message}"
+            "Response message " + self.response_json["error"]["store"] + f" is not expected {message}"
 
         return self
 

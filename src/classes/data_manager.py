@@ -5,7 +5,7 @@ import mysql.connector as mysql
 from configuration import MYSQL_CREDENTIALS
 
 
-class TestDataManager:
+class DataManager:
     def __init__(self):
         self.connection = mysql.connect(**MYSQL_CREDENTIALS)
         self.cursor = self.connection.cursor(dictionary=True)
