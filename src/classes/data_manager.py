@@ -21,7 +21,7 @@ class DataManager:
             self.cursor.execute(select_query, ("%Product%", 7))
             products = self.cursor.fetchall()
 
-            return [(product["product_id"], random.randint(1, 20), float(product["price"])) for product in products]
+            return [(product["product_id"], 1, float(product["price"])) for product in products]
 
     def get_invalid_test_products_from_db(self) -> list[tuple]:
         with self.connection:

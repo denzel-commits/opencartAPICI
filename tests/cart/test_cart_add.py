@@ -19,7 +19,7 @@ class TestAddToCart:
     @allure.title("Add product to cart base session")
     @pytest.mark.session
     @pytest.mark.skip(reason="session test case")
-    @pytest.mark.parametrize("product_id, quantity, price", [random.choice(test_products)])
+    @pytest.mark.parametrize("product_id, quantity, price", [test_products[0]])
     def test_add_to_cart(self, product_id, quantity, price, opencart_base_url, api_token, api_session):
         params = {"api_token": api_token}
         data = {
@@ -60,7 +60,7 @@ class TestAddToCart:
 
     @allure.title("Add product to cart base")
     @pytest.mark.smoke
-    @pytest.mark.parametrize("product_id, quantity, price", [random.choice(test_products)])
+    @pytest.mark.parametrize("product_id, quantity, price", [test_products[0]])
     def test_add_to_cart_successfully_added(self, product_id, quantity, price, class_cart_client,
                                             remove_all_items_from_cart, taxes_reset_to_zero):
         data = {

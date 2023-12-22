@@ -16,7 +16,7 @@ class TestRemoveFromCart:
     test_products = DataManager().get_test_products_from_db()
 
     @allure.title("Remove product from cart parametrized")
-    @pytest.mark.parametrize("product_id, quantity, price", [random.choice(test_products)])
+    @pytest.mark.parametrize("product_id, quantity, price", [test_products[0]])
     def test_remove_from_card_successfully(self, product_id, quantity, price, class_cart_client,
                                            remove_all_items_from_cart):
         data = {

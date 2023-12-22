@@ -17,7 +17,7 @@ pipeline{
         stage("Test"){
             steps{
                 echo "Testing..."
-                sh 'python -m pytest -n=2 --tb=line'
+                sh 'python -m pytest --dist=loadscope -n=2 --tb=line'
             }
         }
     }
