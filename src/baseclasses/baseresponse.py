@@ -17,6 +17,7 @@ class BaseResponse:
         try:
             self.response_json = response.json()
         except json.JSONDecodeError as e:
+            self.response_json = {}
             self.logger.error(f"Response json decode error '{e}'")
 
     @allure.step("Verify response status code is {status_code}")
@@ -68,48 +69,9 @@ class BaseResponse:
 
         return self
 
-    @allure.step("Validate product is in cart")
-    def assert_product_is_in_cart(self, product_data: dict) -> Self:
-        self.logger.info(f"Validate {product_data} is in cart")
-
-        assert product_data["product_id"] in [int(cart_item["product_id"]) for cart_item in self.response_json["products"]], \
-            f"Product with id {product_data['product_id']} is not in cart"
-
-        return self
-
-    @allure.step("Validate product quantity in cart")
-    def assert_product_quantity_in_cart(self, product_data: dict) -> Self:
-        self.logger.info(f"Validate {product_data} quantity")
-
-        cart_item_quantity = [int(cart_item["quantity"]) for cart_item in self.response_json["products"]
-                              if int(cart_item["product_id"]) == product_data["product_id"]][0]
-
-        assert product_data["quantity"] == cart_item_quantity, \
-            f"Product quantity in cart {cart_item_quantity} does not match with quantity added {product_data['quantity']}"
-
-        return self
-
-    @allure.step("Validate product is not in cart")
-    def assert_product_is_not_in_cart(self, product_data: dict) -> Self:
-        self.logger.info(f"Validate {product_data} is added to cart")
-
-        assert product_data["product_id"] not in [int(cart_item["product_id"]) for cart_item in self.response_json["products"]], \
-            f"Product with id {product_data['product_id']} is not added to cart"
-
-        return self
-
-    @allure.step("Validate cart total")
-    def assert_cart_total(self, product_data: dict, price: float) -> Self:
-        expected_total = round(product_data["quantity"] * price, 2)
-
-        self.logger.info(f"Validate cart total is {expected_total}")
-
-        formatted_cart_total = round(float(self.response_json["totals"][-1]["text"][1:].replace(",", "")), 2)
-
-        assert expected_total == formatted_cart_total, \
-            f"Cart total {formatted_cart_total} != {expected_total}"
-
-        return self
+    @staticmethod
+    def format_price(price):
+        return round(float(price[1:].replace(",", "")), 2)
 
     def __str__(self):
         return f"\nStatus code: {self.response_status} \n" \

@@ -3,7 +3,6 @@ import logging
 import allure
 
 import requests
-from src.baseclasses.baseresponse import BaseResponse
 
 
 class BaseRequest:
@@ -14,7 +13,7 @@ class BaseRequest:
 
     @allure.step("Making {method} request to '{path}'")
     def _request(self, method: str, path: str, params: dict = None, data: dict = None, headers: dict = None,
-                 retry_count: int = 3) -> BaseResponse:
+                 retry_count: int = 3):
         """
         Request wrapper - adds request retry and logging functionality
         """
@@ -57,7 +56,7 @@ class BaseRequest:
             if response.ok or attempt > retry_count:
                 stop_flag = True
 
-        return BaseResponse(response, self.logger)
+        return response, self.logger
 
     def get(self, path: str = "/", params: dict = None, headers: dict = None):
         return self._request("GET", path=path, params=params, headers=headers)

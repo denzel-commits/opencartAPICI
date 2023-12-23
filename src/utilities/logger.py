@@ -1,13 +1,13 @@
 import os
 import logging
 
-from configuration import LOGGING_LEVEL, LOG_FILE_PATH
+from configuration import DEFAULT_LOGGING_LEVEL, LOG_FILE_PATH
 
 
 class Logger:
     def __init__(self, name: str, log_level: str) -> None:
         self._logger = logging.getLogger(name)
-        self._logger.setLevel(LOGGING_LEVEL)
+        self._logger.setLevel(logging.INFO)
 
         if not os.path.exists(LOG_FILE_PATH):
             os.makedirs(LOG_FILE_PATH)

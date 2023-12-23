@@ -4,7 +4,7 @@ import mysql.connector as mysql
 import pytest
 import requests
 
-from configuration import MYSQL_CREDENTIALS, API_KEY, API_USERNAME
+from configuration import MYSQL_CREDENTIALS, API_KEY, API_USERNAME, DEFAULT_LOGGING_LEVEL
 from src.baseclasses.baserequest import BaseRequest
 from src.classes.cart_client import CartClient
 from src.enums.routes import Routes
@@ -12,7 +12,7 @@ from src.utilities.logger import Logger
 
 
 def pytest_addoption(parser):
-    parser.addoption("--logging_level", default="WARNING")
+    parser.addoption("--logging_level", default=DEFAULT_LOGGING_LEVEL)
     parser.addoption("--base_url", default="http://192.168.1.127:8081")
 
 

@@ -1,23 +1,40 @@
 import os
-import hashlib
-from socket import socket
 
 import pytest
-from configuration import TEST_DATA_PATH
+from configuration import TEST_DATA_PATH, API_ID
+from src.enums.tables import Tables
 from src.utilities.utilities import csv_reader
+
+
+@pytest.fixture()
+def setup_products_in_cart(db_connection, api_token, request):
+    test_products = request.param
+
+    insert_query = f"INSERT INTO {Tables.PREFIX}{Tables.CART} " \
+                   f"(`api_id`, `customer_id`, `session_id`, `product_id`, `recurring_id`, `option`, `quantity`, `date_added`) " \
+                   f"VALUES( %s, %s, %s, %s, %s, %s, %s, NOW())"
+
+    if isinstance(test_products, list):
+        for test_product in test_products:
+            product_id, quantity, price = test_product
+            db_connection.cursor().execute(insert_query, (API_ID, 0, api_token, product_id, 0, '[]', quantity))
+    else:
+        product_id, quantity, price = test_products
+        db_connection.cursor().execute(insert_query, (API_ID, 0, api_token, product_id, 0, '[]', quantity))
+
+    db_connection.commit()
 
 
 @pytest.fixture(scope="class")
 def taxes_reset_to_zero(db_connection):
-    taxes_table = "oc_tax_rate"
     cursor = db_connection.cursor(dictionary=True)
 
-    select_taxes_query = f"SELECT tax_rate_id, rate FROM {taxes_table}"
+    select_taxes_query = f"SELECT tax_rate_id, rate FROM {Tables.PREFIX}{Tables.TAXES}"
     cursor.execute(select_taxes_query)
 
     tax_rates = cursor.fetchall()
 
-    update_taxes_query = f"UPDATE {taxes_table} SET rate = %s"
+    update_taxes_query = f"UPDATE {Tables.PREFIX}{Tables.TAXES} SET rate = %s"
     cursor.execute(update_taxes_query, (0.0,))
 
     db_connection.commit()
@@ -25,7 +42,7 @@ def taxes_reset_to_zero(db_connection):
     yield
 
     for tax_rate in tax_rates:
-        restore_taxes_query = f"UPDATE {taxes_table} SET rate = %s WHERE tax_rate_id = %s"
+        restore_taxes_query = f"UPDATE {Tables.PREFIX}{Tables.TAXES} SET rate = %s WHERE tax_rate_id = %s"
         cursor.execute(restore_taxes_query, (tax_rate["rate"], tax_rate["tax_rate_id"]))
 
     db_connection.commit()
@@ -34,7 +51,7 @@ def taxes_reset_to_zero(db_connection):
 @pytest.fixture()
 def remove_all_items_from_cart(db_connection, api_token):
     def remove_all():
-        delete_query = "DELETE FROM oc_cart WHERE session_id=%s"
+        delete_query = f"DELETE FROM {Tables.PREFIX}{Tables.CART} WHERE session_id=%s"
         db_connection.cursor().execute(delete_query, (api_token,))
         db_connection.commit()
 
@@ -204,34 +221,3 @@ def test_products(db_connection):
 #             data = [{"product_id": product_id[0], "quantity": 1} for product_id in product_ids]
 #
 #             metafunc.parametrize("product_data", data)
-
-
-@pytest.fixture()
-def create_admin_user(db_connection, faker, request):
-    def teardown():
-        tquery = "DELETE FROM oc_user WHERE username=%s"
-        db_connection.cursor().execute(tquery, (username,))
-        db_connection.commit()
-    request.addfinalizer(teardown)
-
-    query = "INSERT INTO oc_user " \
-            "(user_group_id, username, password, salt, firstname, lastname, email, image, code, ip, status," \
-            " date_added) " \
-            "VALUES (1, %s, %s, %s, %s, %s, %s, '', '', %s, 1, NOW());"
-
-    username = faker.profile(fields=["username"])["username"]  # faker.safe_email().split("@")[0]
-    test_password = "admin!32"
-    salt = "VGNUpQvgV"
-    ip = socket.gethostbyname(socket.gethostname())
-
-    db_connection.execute(query, (
-        username,
-        hashlib.md5(test_password.encode()).hexdigest(),
-        salt,
-        faker.first_name(),
-        faker.last_name(),
-        faker.safe_email(),
-        ip
-    ))
-
-    return username, test_password

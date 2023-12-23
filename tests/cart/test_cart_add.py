@@ -142,8 +142,8 @@ class TestAddToCartNegative:
     @pytest.mark.parametrize("product_id, quantity", [(10001, 1), (0, 1)])
     def test_add_to_cart_non_existent_product(self, product_id, quantity, class_cart_client, remove_all_items_from_cart):
         data = {
-            'product_id': product_id,
-            'quantity': quantity
+            "product_id": product_id,
+            "quantity": quantity
         }
 
         class_cart_client.add_product_api(product_data=data). \
@@ -154,14 +154,14 @@ class TestAddToCartNegative:
         class_cart_client.get_products_api(). \
             assert_status_code(HTTPStatus.OK). \
             validate_schema(Cart).\
-            assert_product_is_not_in_cart(data)
+            assert_product_is_not_in_cart(data["product_id"])
 
     @allure.title("Add product to cart with invalid product id")
     @pytest.mark.parametrize("product_id, quantity", [(-6, 1), (0, 1)])
     def test_add_to_cart_invalid_product(self, product_id, quantity, class_cart_client, remove_all_items_from_cart):
         data = {
-            'product_id': product_id,
-            'quantity': quantity
+            "product_id": product_id,
+            "quantity": quantity
         }
 
         class_cart_client.add_product_api(product_data=data). \
@@ -172,7 +172,7 @@ class TestAddToCartNegative:
         class_cart_client.get_products_api(). \
             assert_status_code(HTTPStatus.OK). \
             validate_schema(Cart).\
-            assert_product_is_not_in_cart(data)
+            assert_product_is_not_in_cart(data["product_id"])
 
     @allure.title("Add product to cart with invalid quantity")
     @pytest.mark.parametrize("product_id, quantity", [*test_products])
