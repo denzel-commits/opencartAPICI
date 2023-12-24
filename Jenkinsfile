@@ -11,6 +11,7 @@ pipeline{
         string(name: 'BASE_URL', defaultValue: 'http://192.168.1.127:8081', description: 'Enter system Base URL')
         choice(name: 'WORKERS_NUMBER', choices: ['1', '2', '3', '4'], description: 'Select the number of selenium workers')
         choice(name: 'LOG_LEVEL', choices: ['WARNING', 'INFO'], description: 'Log level')
+        choice(name: 'TRACE_BACK', choices: ['line', 'no', 'long'], description: 'Traceback ')
     }
     stages{
         stage("Build"){
@@ -22,7 +23,7 @@ pipeline{
         stage("Test"){
             steps{
                 echo "Testing..."
-                sh 'python -m pytest -n=${params.WORKERS_NUMBER}'
+                sh "python -m pytest -n=${params.WORKERS_NUMBER} --logging_level=${params.LOG_LEVEL} --base_url=${params.BASE_URL} --tb={params.TRACE_BACK}"
             }
         }
     }
