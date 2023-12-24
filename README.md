@@ -23,6 +23,7 @@ The following methods of "/cart" API endpoint:
 # Prerequisites
 
 1. Install OpenCart 3.0 test environment
+2. Download it from repository: `git@github.com:denzel-commits/opencartAPICI.git`
 ## For Windows run:
 ``$Env:OPENCART_PORT=8081; $Env:PHPADMIN_PORT=8888; $Env:LOCAL_IP=$(Get-NetIPAddress -AddressFamily IPv4 -InterfaceAlias 'Wi-Fi' | Where-Object {$_.AddressFamily -eq 'IPv4'}).IPAddress; docker-compose up -d``
 
