@@ -47,9 +47,9 @@ class CartAssertHelper(BaseResponse):
 
         formatted_cart_total = round(float(self.response_json["totals"][-1]["text"][1:].replace(",", "")), 2)
 
-        self.logger.info(f"Validate cart is empty")
+        self.logger.info("Validate cart is empty")
         assert len(self.response_json["products"]) == 0, \
-            f"Cart is not empty"
+            "Cart is not empty"
 
         self.logger.info(f"Validate cart total is {expected_total}")
         assert expected_total == formatted_cart_total, \

@@ -1,7 +1,7 @@
 import os
 import logging
 
-from configuration import DEFAULT_LOGGING_LEVEL, LOG_FILE_PATH
+from configuration import LOG_FILE_PATH
 
 
 class Logger:

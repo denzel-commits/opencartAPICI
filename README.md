@@ -22,13 +22,10 @@ The following methods of "/cart" API endpoint:
 
 # Prerequisites
 
-1. Install OpenCart 3.0 test environment
-2. Download it from repository: `git@github.com:denzel-commits/opencartAPICI.git`
-## For Windows run:
-``$Env:OPENCART_PORT=8081; $Env:PHPADMIN_PORT=8888; $Env:LOCAL_IP=$(Get-NetIPAddress -AddressFamily IPv4 -InterfaceAlias 'Wi-Fi' | Where-Object {$_.AddressFamily -eq 'IPv4'}).IPAddress; docker-compose up -d``
+1. Build OpenCart 3.0 test environment
+## Run this command for Windows:
+``$Env:OPENCART_PORT=8081; $Env:PHPADMIN_PORT=8888; $Env:LOCAL_IP=$(Get-NetIPAddress -AddressFamily IPv4 -InterfaceAlias 'Wi-Fi' | Where-Object {$_.AddressFamily -eq 'IPv4'}).IPAddress; ./test_env/docker-compose up -d``
 
-## For Linux run:
-``$Env:OPENCART_PORT=8081; $Env:PHPADMIN_PORT=8888; $Env:LOCAL_IP=$(Get-NetIPAddress -AddressFamily IPv4 -InterfaceAlias 'Wi-Fi' | Where-Object {$_.AddressFamily -eq 'IPv4'}).IPAddress; docker-compose up -d``
 
 ---
 
@@ -60,13 +57,17 @@ This installs all modules required to run the tool.
 ---
 
 # Run tests from Jenkins CI
-Use Jenkinsfile to run to test from Jenkins CI server
+Use Jenkinsfile to run the test from Jenkins CI server
 
-1. Create new pipeline job
-2. Set CSM path: https://github.com/denzel-commits/opencartAPICI/tree/develop
-3. Set Branch: "*/develop"
-4. Run build
-5. Check results allure report
+1. Create new Pipeline project
+2. Choose Pipeline > Definition: Pipeline script from SCM
+3. Set SCM to GIT
+4. Repository URL: https://github.com/denzel-commits/opencartAPICI/tree/develop
+5. Set Branches to build: "*/develop"
+6. Script Path: "Jenkinsfile"
+7. Click "Save"
+8. Click "Build now" to start test run
+9. Check allure report for results
 ___
 
 # Setup OpenCart API
