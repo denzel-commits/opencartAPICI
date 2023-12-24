@@ -13,7 +13,7 @@ from src.utilities.logger import Logger
 
 
 def pytest_addoption(parser):
-    parser.addoption("--logging_level", default=DEFAULT_LOGGING_LEVEL, choices=("INFO", "WARN", "ERROR"),)
+    parser.addoption("--logging_level", default=DEFAULT_LOGGING_LEVEL, choices=("INFO", "WARNING", "ERROR"),)
     parser.addoption("--base_url", default=DEFAULT_BASE_URL)
 
 
