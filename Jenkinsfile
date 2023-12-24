@@ -23,7 +23,7 @@ pipeline{
         stage("Test"){
             steps{
                 echo "Testing..."
-                sh "python -m pytest -n=${params.WORKERS_NUMBER} --logging_level=${params.LOG_LEVEL} --base_url=${params.BASE_URL} --tb={params.TRACE_BACK}"
+                sh "python -m pytest -n=${params.WORKERS_NUMBER} --logging_level=${params.LOG_LEVEL} --base_url=${params.BASE_URL} --tb=${params.TRACE_BACK}"
             }
         }
     }
