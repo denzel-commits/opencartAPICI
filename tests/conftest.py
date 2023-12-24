@@ -4,32 +4,44 @@ import mysql.connector as mysql
 import pytest
 import requests
 
-from configuration import MYSQL_CREDENTIALS, API_KEY, API_USERNAME, DEFAULT_LOGGING_LEVEL
+from configuration import MYSQL_CREDENTIALS, API_KEY, API_USERNAME, DEFAULT_LOGGING_LEVEL, DEFAULT_BASE_URL
 from src.baseclasses.baserequest import BaseRequest
 from src.classes.cart_client import CartClient
+from src.classes.login_client import LoginClient
 from src.enums.routes import Routes
 from src.utilities.logger import Logger
 
 
 def pytest_addoption(parser):
-    parser.addoption("--logging_level", default=DEFAULT_LOGGING_LEVEL)
-    parser.addoption("--base_url", default="http://192.168.1.127:8081")
+    parser.addoption("--logging_level", default=DEFAULT_LOGGING_LEVEL, choices=("INFO", "WARN", "ERROR"),)
+    parser.addoption("--base_url", default=DEFAULT_BASE_URL)
 
 
 @pytest.fixture(scope="session")
-def class_cart_client(api_token, logger, request):
-    base_url = request.config.getoption("--base_url")
-    api_client = BaseRequest(base_url=base_url, logger=logger, token=api_token)
+def class_cart_client(api_token, opencart_base_url, logger):
+    api_client = BaseRequest(base_url=opencart_base_url, logger=logger, token=api_token)
 
     return CartClient(api_client)
 
 
 @pytest.fixture(scope="session")
-def api_token(request):
+def class_cart_client_unauthorized(logger, opencart_base_url):
+    api_client = BaseRequest(base_url=opencart_base_url, logger=logger)
 
-    base_url = request.config.getoption("--base_url")
+    return CartClient(api_client)
 
-    response = requests.post(f"{base_url}{Routes.LOGIN}",
+
+@pytest.fixture(scope="session")
+def class_login_client(logger, opencart_base_url):
+    api_client = BaseRequest(base_url=opencart_base_url, logger=logger)
+
+    return LoginClient(api_client)
+
+
+@pytest.fixture(scope="session")
+def api_token(opencart_base_url):
+
+    response = requests.post(f"{opencart_base_url}{Routes.LOGIN}",
                              data={'username': API_USERNAME, 'key': API_KEY})
 
     assert response.status_code == HTTPStatus.OK
@@ -53,6 +65,11 @@ def logger(request):
 
 
 @pytest.fixture(scope="session")
+def opencart_base_url(request):
+    return request.config.getoption("--base_url")
+
+
+@pytest.fixture(scope="session")
 def api_session(request):
 
     base_url = request.config.getoption("--base_url")
@@ -66,14 +83,3 @@ def api_session(request):
     print(response.json()["success"], response.json()["api_token"])
     print(session.cookies.get_dict())
     yield session
-
-
-@pytest.fixture()
-def opencart_base_url(request):
-    return request.config.getoption("--base_url")
-
-
-@pytest.fixture()
-def opencart_api(logger, request):
-    base_url = request.config.getoption("--base_url")
-    return BaseRequest(base_url=base_url, logger=logger)

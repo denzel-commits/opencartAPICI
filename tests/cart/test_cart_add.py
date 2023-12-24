@@ -1,10 +1,9 @@
 from http import HTTPStatus
-import random
 
 import allure
 import pytest
 
-from src.classes.data_manager import DataManager
+from src.utilities.data_manager import DataManager
 from src.enums.routes import Routes
 from src.pydantic_schemas.cart import Cart
 from src.pydantic_schemas.success import Success
@@ -197,15 +196,15 @@ class TestAddToCartNegative:
             validate_schema(Cart).\
             assert_product_is_in_cart(expected_data)
 
-    @allure.title("Add product to cart with invalid token")
-    def test_add_to_cart_invalid_token(self, opencart_api):
-        params = {"api_token": 'c023e3cb112088fd6c626713ab'}
+    @allure.title("Add product to cart unauthorized")
+    @pytest.mark.parametrize("product_id, quantity", [test_products[0]])
+    def test_add_to_cart_unauthorized(self, product_id, quantity, class_cart_client_unauthorized):
         data = {
-            'product_id': 1,
-            'quantity': 1
+            'product_id': product_id,
+            'quantity': quantity
         }
 
-        opencart_api.post(Routes.CART + "/add", params=params, data=data).\
+        class_cart_client_unauthorized.add_product_api(product_data=data).\
             assert_status_code(HTTPStatus.OK).\
             validate_schema(Error).\
             assert_warning_message("Warning: You do not have permission to access the API!")

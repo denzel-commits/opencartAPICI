@@ -1,10 +1,9 @@
-import random
 from http import HTTPStatus
 
 import allure
 import pytest
 
-from src.classes.data_manager import DataManager
+from src.utilities.data_manager import DataManager
 from src.pydantic_schemas.cart import Cart
 from src.pydantic_schemas.error import Error
 from src.pydantic_schemas.success import Success
@@ -62,7 +61,7 @@ class TestRemoveFromCartNegative:
     def test_remove_from_cart_non_existent_cart_item(self, cart_id, class_cart_client, remove_all_items_from_cart):
 
         class_cart_client.remove_product_api(cart_id=cart_id). \
-            assert_status_code(HTTPStatus.OK). \
+            assert_status_code(HTTPStatus.NOT_FOUND). \
             validate_schema(Success). \
             assert_success_message("Success: You have modified your shopping cart!")
 
@@ -70,12 +69,12 @@ class TestRemoveFromCartNegative:
     @pytest.mark.parametrize("cart_id", [-1, 0, ''])
     def test_remove_from_cart_invalid_cart_id(self, cart_id, class_cart_client):
         class_cart_client.remove_product_api(cart_id=cart_id). \
-            assert_status_code(HTTPStatus.OK). \
+            assert_status_code(HTTPStatus.NOT_FOUND). \
             validate_schema(Success). \
             assert_success_message("Success: You have modified your shopping cart!")
 
     @allure.title("Remove product from cart with no cart_id key")
     def test_remove_from_cart_no_cart_id_key(self, class_cart_client):
         class_cart_client.remove_product_api(). \
-            assert_status_code(HTTPStatus.OK). \
+            assert_status_code(HTTPStatus.NOT_FOUND). \
             validate_schema(Error)

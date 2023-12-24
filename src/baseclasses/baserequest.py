@@ -13,7 +13,7 @@ class BaseRequest:
 
     @allure.step("Making {method} request to '{path}'")
     def _request(self, method: str, path: str, params: dict = None, data: dict = None, headers: dict = None,
-                 retry_count: int = 3):
+                 retry_count: int = 3) -> tuple[requests.Response, logging]:
         """
         Request wrapper - adds request retry and logging functionality
         """
