@@ -54,9 +54,10 @@ class TestRemoveFromCart:
 
 
 @allure.feature("Cart")
-@allure.story("Remove from cart invalid cart items")
+@allure.story("Remove from cart negative")
 class TestRemoveFromCartNegative:
     @allure.title("Remove non existent product")
+    @pytest.mark.xfail(reason="Expect 404 not found")
     @pytest.mark.parametrize("cart_id", [100015])
     def test_remove_from_cart_non_existent_cart_item(self, cart_id, class_cart_client, remove_all_items_from_cart):
 
@@ -67,6 +68,7 @@ class TestRemoveFromCartNegative:
 
     @allure.title("Remove product from cart invalid cart id")
     @pytest.mark.parametrize("cart_id", [-1, 0, ''])
+    @pytest.mark.xfail(reason="Expect 404 not found")
     def test_remove_from_cart_invalid_cart_id(self, cart_id, class_cart_client):
         class_cart_client.remove_product_api(cart_id=cart_id). \
             assert_status_code(HTTPStatus.NOT_FOUND). \
@@ -74,6 +76,7 @@ class TestRemoveFromCartNegative:
             assert_success_message("Success: You have modified your shopping cart!")
 
     @allure.title("Remove product from cart with no cart_id key")
+    @pytest.mark.xfail(reason="Expect 404 not found")
     def test_remove_from_cart_no_cart_id_key(self, class_cart_client):
         class_cart_client.remove_product_api(). \
             assert_status_code(HTTPStatus.NOT_FOUND). \

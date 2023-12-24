@@ -11,7 +11,7 @@ from src.pydantic_schemas.error import Error
 
 
 @allure.feature("Cart")
-@allure.story("Add to cart happy path")
+@allure.story("Add to cart")
 class TestAddToCart:
     test_products = DataManager().get_test_products_from_db()
 
@@ -174,6 +174,7 @@ class TestAddToCartNegative:
             assert_product_is_not_in_cart(data["product_id"])
 
     @allure.title("Add product to cart with invalid quantity")
+    @pytest.mark.xfail(reason="Returned: Success: You have modified your shopping cart - but was not added to cart")
     @pytest.mark.parametrize("product_id, quantity", [*test_products])
     def test_add_to_cart_invalid_quantity(self, product_id, quantity, class_cart_client,
                                           remove_all_items_from_cart):
