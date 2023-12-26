@@ -62,8 +62,8 @@ Use Jenkinsfile to run the test from Jenkins CI server
 1. Create new Pipeline project
 2. Choose Pipeline > Definition: Pipeline script from SCM
 3. Set SCM to GIT
-4. Repository URL: https://github.com/denzel-commits/opencartAPICI/tree/develop
-5. Set Branches to build: "*/develop"
+4. Repository URL: https://github.com/denzel-commits/opencartAPICI
+5. Set Branches to build: "*/master"
 6. Script Path: "Jenkinsfile"
 7. Click "Save"
 8. Click "Build now" to start test run
