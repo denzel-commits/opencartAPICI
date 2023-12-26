@@ -51,9 +51,6 @@ This installs all modules required to run the tool.
 4. Run command: ``$ docker build . -t oc-api-test:0.1``
 5. Run command: ``$ docker run --rm oc-api-test:0.1 -n=2``
 
-## Run tests from docker with default parameters
-``$ docker-compose up``
-
 ---
 
 # Run tests from Jenkins CI
@@ -103,5 +100,5 @@ $ python -m pytest --help
 
 # Usage examples
 
-* $ python -m pytest --logging_level=INFO --base_url=127.0.1.127:8081
-* $ python -m pytest --base_url=127.0.1.127:8081
+* $ python -m pytest --logging_level=INFO --base_url=http://192.168.1.127:8081
+* $ python -m pytest --base_url=http://192.168.1.127:8081
